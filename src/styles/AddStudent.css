@@ -1,0 +1,189 @@
+.add-student-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 2% auto;
+  margin-left: 2%;
+  margin-right: 2%;
+  max-height: 100% auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-student-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 10px;
+  row-gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.form-group input{
+  padding: 8px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  width: 90%;       /*  reduce el ancho */
+  margin: 0 auto; 
+} 
+
+
+.form-actions {
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.form-group-row {
+  display: flex;
+  justify-content: space-between; /* separa los elementos */
+  gap: 20px;
+}
+
+.form-group-row .form-group {
+  flex: 1;
+  min-width: 0; /* evita que se desborden */
+}
+
+
+
+.searchable-dropdown {
+  position: relative;
+}
+
+.searchable-dropdown input {
+  padding: 8px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.dropdown-options {
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  background-color: white;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-option {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-option:hover {
+  background-color: #f2f2f2;
+}
+
+.tutor-email {
+  color: #999;
+  font-size: 0.9em;
+}
+
+.success-messageEdit {
+  color: #0056A5;
+  margin-top: 45px;
+  margin-left: 45px;
+}
+
+.error-messageEdit {
+  color: red;
+  margin-top: 45px;
+  margin-left: 45px;
+}
+
+/* Estilo para el contenedor de la búsqueda con triángulo */
+.custom-searchable-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.custom-searchable-input input {
+  width: 100%;
+  padding-right: 30px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+/* Estilo para el menú desplegable */
+.dropdown-options {
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0 0 12px 12px;
+  z-index: 10;
+  max-height: 210px; /* máximo 3 elementos */
+  overflow-y: auto;
+  margin-top: 4px;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+}
+
+.dropdown-option {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown-option:last-child {
+  border-bottom: none;
+}
+
+.dropdown-option:hover {
+  background-color: #f5f5f5;
+}
+
+.tutor-email {
+  color: #888;
+  font-size: 13px;
+}
+
+/* Scrollbar opcional estético */
+.dropdown-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+
+
+
+
+/* RESPONSIVE - Una sola columna en pantallas pequeñas */
+@media (max-width: 958px) {
+  .add-student-form {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions,
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+}

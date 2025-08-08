@@ -1,0 +1,162 @@
+
+.profile-buttons {
+  display: flex;
+  margin-top: 1%;
+  gap: 13%;
+  margin-left: 10%;
+  margin-right: 10%;
+  justify-content: center;
+  align-items: center
+}
+
+.btn-primary {
+  width: 40%;
+  display: flex;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+  background-color: #0857a1;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer; 
+  padding: 9px 2px;
+}
+
+.btn-secondary {
+  border: 2px solid #0857a1;
+  color: #0857a1;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  width: 45%;
+  display: flex;
+  padding: 11px 11px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;;
+}
+
+.btn-primaryEdit,
+.btn-secondaryEdit {
+  width: 30%;
+  padding: 11px 11px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 8px;
+  display: flex;
+  text-align: center;
+  justify-content: center; /* centra texto horizontalmente */
+  align-items: center;     /* centra verticalmente */
+  display: flex;
+  box-sizing: border-box; /* importante para mantener el mismo tamaño */
+}
+
+.btn-primaryEdit {
+  background-color: #0857a1;
+  color: white;
+  border: none;
+}
+
+.btn-secondaryEdit {
+  background-color: white;
+  color: #0857a1;
+  border: 2px solid #0857a1;
+}
+
+
+.btn-text {
+  flex: 1;
+  margin-left: 6%;
+  align-items: center; 
+  display: flex;
+}
+
+.btn-text2 {
+  flex: 1;
+  text-align: center;
+}
+
+.iconexit {
+  margin-left: 3%;
+  width:  10%;
+  height: auto;
+  color: #b8ecea;
+}
+
+.input-editable{
+  border: 1px solid #7f7c7a;
+  color: #0857a1;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  padding: 5px 25px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  text-align: center;
+}
+
+
+.add-button {
+  background-color: white;
+  color: #0056A5;
+  border: 2px solid #0056A5;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 5px 25px;
+}
+
+.btnOp{
+  background-color: transparent;
+  color: inherit; 
+  border: none;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.btnConAc{
+  margin-left: 3%;
+  background-color: white;
+  color: #0056A5;
+  border-radius: 8px;
+  border: 2px solid #0056A5;
+  cursor: pointer;
+  width: 200px;
+  height: 50px;
+}
+
+.btnCanAc{
+  cursor: pointer;
+  border: 1px solid #0857a1;
+  color: white;
+  background-color: #0857a1;
+  border-radius: 8px;
+  width: 200px;
+  height: 50px;
+}
+
+.iconOpt {
+  width: 90px; 
+  height: 28px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.iconOpt:hover {
+  transform: scale(1.1); /* Efecto al pasar el mouse */
+}
+
+.add-button-user {
+  padding: 10px 30px;
+  background-color: #0056A5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

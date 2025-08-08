@@ -1,0 +1,114 @@
+.container_2 {
+  position: relative;
+}
+
+.modal-loading {
+  position: absolute;              /* Cambiado de fixed a absolute */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+
+
+.modal-content3 {
+  background: white;
+  padding: 20px 40px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  display: flex;              /* Activa flexbox */
+  justify-content: center;    /* Centrado horizontal */
+  align-items: center;        /* Centrado vertical */
+  
+}
+
+.modal-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50%;
+  height: 15%;
+}
+
+.guardian-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  
+}
+
+.guardian-card, .student-card {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  padding: 12px;
+  align-items: center;
+  gap: 16px;
+}
+
+
+.profile-img {
+  width: 25%;
+  height: 25%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+
+.disabled-button {
+  width: 25%;
+  padding: 2%;
+  background-color: white;
+  color: #0056A5;
+  border-radius: 8px;
+  border: 2px solid #0056A5;
+  cursor: pointer;
+}
+
+.check-input {
+  width: 25%;
+  padding: 2%;
+  cursor: pointer;
+  float: right;
+}
+
+.title {
+  text-align: center;
+  margin-left: 40px; /* Ajusta según tu necesidad */
+}
+
+.check-input {
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+}
+
+.disabled-button {
+  margin-left: auto;
+}
+
+.check-input {
+  margin-left: auto;
+}
+
+
+
+.student-list {
+  max-height: 230px; /* ajusta según necesidad */
+  overflow-y: auto;
+  padding-right: 10px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+

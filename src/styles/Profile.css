@@ -1,0 +1,99 @@
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-left: 1%;
+}
+
+.imageprofile {
+  margin-left: 2%;
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 140px;
+  margin-top: -7%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.imageprofile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Para que se recorte y no se deforme */
+  border-radius: 50%;
+}
+
+.profile-info {
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px #c8c5c3;
+  margin-left: 2.5%;
+  padding: 3%;
+  margin-right: 2.5%;
+}
+
+/* Contenedor principal - dos columnas en pantallas grandes */
+.profile-info2 {
+  display: flex;
+  gap: 30px;
+}
+
+/* Columnas en pantallas grandes */
+.profile-info2-1 {
+  width: 30%;
+  margin-right: 5%;
+}
+
+.profile-info2-2editable {
+  width: 65%;
+}
+
+/* Espaciado en párrafos */
+.profile-info2-1 p{
+  margin-bottom: 4%;
+}
+
+/* Color para títulos en pantalla grande */
+.profile-info2-1 p strong {
+  color: #0857a1;
+}
+@media (max-width: 768px) {
+  .profile-info2-1 {
+    position: absolute;  /* oculta columna izquierda */
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .profile-info2-2editable {
+    width: 100%;
+  }
+
+  .profile-info2-2editable p {
+    position: relative;      /* para padding */
+    padding-top: 2%;      /* espacio para el título */
+    text-align: center;      /* centra contenido */
+  }
+
+  /* Quita position absolute para que el ::before pueda centrarse */
+  .profile-info2-2editable p::before {
+    content: "";
+    display: block;
+    font-weight: bold;
+    color: #0857a1;
+    text-align: center;
+  }
+
+  .profile-info2-2editable p:nth-child(1)::before {
+    content: "Nombre:";
+  }
+  .profile-info2-2editable p:nth-child(2)::before {
+    content: "Apellido:";
+  }
+  .profile-info2-2editable p:nth-child(3)::before {
+    content: "Teléfono:";
+  }
+  .profile-info2-2editable p:nth-child(4)::before {
+    content: "Correo Electrónico:";
+  }
+}
