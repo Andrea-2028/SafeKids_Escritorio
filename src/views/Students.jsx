@@ -5,7 +5,6 @@ import "../styles/Students.css";
 import { useState, useEffect } from "react";
 
 import api from "../Api/axiosInstance.js";
-
 function Students({ setView }) {
 
   const [groups, setGroups] = useState([]);
