@@ -3,19 +3,18 @@ import Sidebar from "./components/Sidebar";
 import Home from "./views/Home";
 import Profile from "./views/Profile";
 import EditProfile from "./views/EditProfile";
-import Students from "./views/Students.jsx";
-import AddStudent from "./views/AddStudent.jsx";
-import Guardians from "./views/Guardians.jsx";
-import AddGuardian from "./views/AddGuardian.jsx";
-import AuthPeople from "./views/AuthPeople.jsx";
-import Exit from "./views/Exit.jsx"
-import Exit2 from "./views/Exit2.jsx"
-
-import Login from "./views/Login.jsx"
-import RecoverEmail from "./views/RecoverEmail.jsx"
-import RecoverCode from "./views/RecoverCode.jsx"
-import ResetPassword from "./views/ResetPassword.jsx"
-import SecondFactor from "./views/SecondFactor.jsx"
+import Students from "./views/students";
+import AddStudent from "./views/AddStudent";
+import Guardians from "./views/Guardians";
+import AddGuardian from "./views/AddGuardian";
+import AuthPeople from "./views/AuthPeople";
+import Exit from "./views/Exit";
+import Exit2 from "./views/Exit2";
+import Login from "./views/Login";
+import RecoverEmail from "./views/RecoverEmail";
+import RecoverCode from "./views/RecoverCode";
+import ResetPassword from "./views/ResetPassword";
+import SecondFactor from "./views/SecondFactor";
 
 function App() {
   const [view, setView] = useState("login");
