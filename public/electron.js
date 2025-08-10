@@ -3,8 +3,6 @@ const path = require('path');
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 900,
-    height: 700,
     icon: path.join(__dirname, 'public/logo.icon'), 
     webPreferences: {
       contextIsolation: true
@@ -13,6 +11,7 @@ function createWindow() {
 
   win.loadFile(path.join(__dirname, '../build/index.html'));
   win.webContents.openDevTools();
+
 }
 
 app.whenReady().then(createWindow);

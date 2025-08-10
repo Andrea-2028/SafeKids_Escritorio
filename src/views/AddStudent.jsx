@@ -115,56 +115,56 @@ function AddStudent({ setView }) {
     if (selectedTutor2?.id && selectedTutor2.id !== selectedTutor1.id) {
       guardianIds.push(selectedTutor2.id);
     }
-
     guardianIds.forEach((id, index) => {
       formData.append(`guardianIds[${index}]`, id);
     });
-    
+  //Validaciones para el formulario
     if (!firstName || firstName.length > 100) {
-    setError("El nombre es obligatorio y debe tener máximo 100 caracteres.");
-    return;
-  }
-  if (!lastName || lastName.length > 100) {
-    setError("El apellido es obligatorio y debe tener máximo 100 caracteres.");
-    return;
-  }
-  if (!birthDate) {
-    setError("La fecha de nacimiento es obligatoria.");
-    return;
-  }
-  if (!gradeSection || gradeSection.length > 50) {
-    setError("El grupo es obligatorio y debe tener máximo 50 caracteres.");
-    return;
-  }
-  if (!photo) {
-    setError("La foto es obligatoria.");
-    return;
-  }
-  if (photo.size > 2 * 1024 * 1024) {
-    setError("La imagen no debe pesar más de 2MB.");
-    return;
-  }
-  const validTypes = ["image/jpeg", "image/jpg", "image/png"];
-  if (!validTypes.includes(photo.type)) {
-    setError("La imagen debe estar en formato JPG o PNG.");
-    return;
-  }
+      setError("El nombre es obligatorio y debe tener máximo 100 caracteres.");
+      return;
+    }
+    if (!lastName || lastName.length > 100) {
+      setError("El apellido es obligatorio y debe tener máximo 100 caracteres.");
+      return;
+    }
+    if (!birthDate) {
+      setError("La fecha de nacimiento es obligatoria.");
+      return;
+    }
+    if (!gradeSection || gradeSection.length > 50) {
+      setError("El grupo es obligatorio y debe tener máximo 50 caracteres.");
+      return;
+    }
+    if (!photo) {
+      setError("La foto es obligatoria.");
+      return;
+    }
+    if (photo.size > 2 * 1024 * 1024) {
+      setError("La imagen no debe pesar más de 2MB.");
+      return;
+    }
+    const validTypes = ["image/jpeg", "image/jpg", "image/png"];
+    if (!validTypes.includes(photo.type)) {
+      setError("La imagen debe estar en formato JPG o PNG.");
+      return;
+    }
 
-  // Validar tutores
-  if (guardianIds.length === 0) {
-    setError("Debes seleccionar al menos un tutor.");
-    return;
-  }
-  if (guardianIds.length > 2) {
-    setError("Solo puedes seleccionar máximo 2 tutores.");
-    return;
-  }
-  const uniqueIds = new Set(guardianIds);
-  if (uniqueIds.size !== guardianIds.length) {
-    setError("Los tutores seleccionados deben ser diferentes.");
-    return;
-  }
+    // Validar tutores
+    if (guardianIds.length === 0) {
+      setError("Debes seleccionar al menos un tutor.");
+      return;
+    }
+    if (guardianIds.length > 2) {
+      setError("Solo puedes seleccionar máximo 2 tutores.");
+      return;
+    }
+    const uniqueIds = new Set(guardianIds);
+    if (uniqueIds.size !== guardianIds.length) {
+      setError("Los tutores seleccionados deben ser diferentes.");
+      return;
+    }
 
+  //Mada el formulario
     try {
       const token = localStorage.getItem("token");
       const res = await api.post(`/api1/students/create/${schoolId}`, formData, {
@@ -177,15 +177,14 @@ function AddStudent({ setView }) {
       const data = res.data;
 
       if (res.status === 200 || data.success) {
-        console.log(data);
+        //console.log(data);
         setMessage("Alumno creado correctamente");
 
   // Segunda petición al otro backend (api2)
-      console.log("datos nuevos",res.data);
+      //console.log("datos nuevos",res.data);
       const studentId = res.data.data.student.id;
-      console.log("ID del del alumno:", studentId);
+      //console.log("ID del del alumno:", studentId);
       
-
       const formData1= new FormData();
       formData1.append("school_id", schoolId);
 
@@ -196,9 +195,9 @@ function AddStudent({ setView }) {
       formData2.append("lastName", res.data.data.student.lastName);
       formData2.append("file", photo); // ya es un archivo
 
-      for (let pair of formData2.entries()) {
+      /* for (let pair of formData2.entries()) {
       console.log(`${pair[0]}:`, pair[1]);
-      }
+      } */
 
       try {
         await api2.post("/api2/crear/escuela", formData1);
@@ -217,8 +216,6 @@ function AddStudent({ setView }) {
         console.error(error);
         return;
       }
-
-
         setError("");
         setTimeout(() => {
           setView("students");
@@ -233,8 +230,7 @@ function AddStudent({ setView }) {
     }
   };
 
-//lo de las imagenes
-
+//Validaciones Expesificas para la imagen
   useEffect(() => {
     async function loadModels() {
       await faceapi.nets.tinyFaceDetector.loadFromUri("models");

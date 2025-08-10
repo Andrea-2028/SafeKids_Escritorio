@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "../styles/Login.css";
-import { loginUser } from "../Api/Auth";
 import api from '../Api/axiosInstance.js';
 
 function Login({ setView }) {
@@ -58,21 +57,17 @@ function Login({ setView }) {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <span
-            className="eye-icon"
+              <img
+              className="eye-icon"
               onClick={() => setShowPassword(!showPassword)}
               title="Mostrar/ocultar contraseña"
-            >
-              <img
                 src={
                   showPassword
                     ? `${process.env.PUBLIC_URL}/icons/ojo-cerrado.png`
                     : `${process.env.PUBLIC_URL}/icons/ojo-abierto.png`
                 }
                 alt="Icono de visibilidad"
-                className="icono-ojo"
               />
-            </span>
           </div>
           <a href="#" className="forgot-password" onClick={() => setView("recoverEmail")}>
             ¿Olvidaste tu contraseña?

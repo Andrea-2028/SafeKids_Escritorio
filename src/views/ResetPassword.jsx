@@ -69,21 +69,17 @@ function RecoverEmail({ setView }) {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <span
+              <img
               className="eye-icon"
               onClick={() => setShowPassword(!showPassword)}
               title="Mostrar/ocultar contraseña"
-            >
-              <img
                 src={
                   showPassword
                     ? `${process.env.PUBLIC_URL}/icons/ojo-cerrado.png`
                     : `${process.env.PUBLIC_URL}/icons/ojo-abierto.png`
                 }
                 alt="Icono de visibilidad"
-                className="icono-ojo"
               />
-            </span>
           </div>
 
           <div className="password-container">
@@ -94,21 +90,17 @@ function RecoverEmail({ setView }) {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
-            <span
+              <img
               className="eye-icon"
               onClick={() => setShowPassword2(!showPassword2)}
               title="Mostrar/ocultar contraseña"
-            >
-              <img
                 src={
-                  showPassword
+                  showPassword2
                     ? `${process.env.PUBLIC_URL}/icons/ojo-cerrado.png`
                     : `${process.env.PUBLIC_URL}/icons/ojo-abierto.png`
                 }
                 alt="Icono de visibilidad"
-                className="icono-ojo"
               />
-            </span>
           </div>
 
           {message && <p className="success-message">{message}</p>}
