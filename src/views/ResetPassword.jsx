@@ -3,6 +3,7 @@ import api from "../Api/axiosInstance"; // tu instancia de Axios
 import "../styles/RecoverEmail.css";
 
 function RecoverEmail({ setView }) {
+
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -11,6 +12,7 @@ function RecoverEmail({ setView }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
 
+  //Restrablecer contraseñas
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -22,7 +24,7 @@ function RecoverEmail({ setView }) {
     }
 
     const resetToken = localStorage.getItem("resetToken");
-
+    
     if (!resetToken) {
       setError("Token de recuperación no encontrado.");
       return;
@@ -72,7 +74,15 @@ function RecoverEmail({ setView }) {
               onClick={() => setShowPassword(!showPassword)}
               title="Mostrar/ocultar contraseña"
             >
-              {showPassword ? "🙈" : "👁️"}
+              <img
+                src={
+                  showPassword
+                    ? `${process.env.PUBLIC_URL}/icons/ojo-cerrado.png`
+                    : `${process.env.PUBLIC_URL}/icons/ojo-abierto.png`
+                }
+                alt="Icono de visibilidad"
+                className="icono-ojo"
+              />
             </span>
           </div>
 
@@ -89,7 +99,15 @@ function RecoverEmail({ setView }) {
               onClick={() => setShowPassword2(!showPassword2)}
               title="Mostrar/ocultar contraseña"
             >
-              {showPassword2 ? "🙈" : "👁️"}
+              <img
+                src={
+                  showPassword
+                    ? `${process.env.PUBLIC_URL}/icons/ojo-cerrado.png`
+                    : `${process.env.PUBLIC_URL}/icons/ojo-abierto.png`
+                }
+                alt="Icono de visibilidad"
+                className="icono-ojo"
+              />
             </span>
           </div>
 

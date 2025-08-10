@@ -43,6 +43,7 @@ function Guardians({ setView }) {
   const itemsPerPage = 7;
 
 
+  //filtros
   const handleSelectStudent = (student) => {
     setSelectedStudent(student); // Guardas el alumno seleccionado
     setStudentSearchTerm("");    // Limpias la búsqueda
@@ -224,6 +225,7 @@ const totalPages = Math.ceil(guardians.length / itemsPerPage);
     <div className="Stcontainer">
       <div className="headerST">
         <div className="students-controls">
+           {/* {filtro por alumnos} */}
           <div className="custom-select">
             <div className="custom-searchable-input">
               <input
@@ -238,7 +240,6 @@ const totalPages = Math.ceil(guardians.length / itemsPerPage);
                 onBlur={() => setTimeout(() => setDropdownOpen(false), 300)}
                 className="search-input"
               />
-  
               <img
                 src={`${process.env.PUBLIC_URL}/icons/triangulo.png`}
                 alt="Desplegar"
@@ -293,80 +294,80 @@ const totalPages = Math.ceil(guardians.length / itemsPerPage);
                           )}
                         </div>
                       )}
-                    </div>
-                    
-                    <button onClick={() => setView("addGuardian")} className="add-button">Agregar Padre</button>
+          </div>
+            <button onClick={() => setView("addGuardian")} className="add-button">Agregar Padre</button>
           </div>
       </div>
-<table className="students-table">
-  <thead>
-    <tr>
-      <th>Tutor</th>
-      <th>Teléfono</th>
-      <th>Alumno</th>
-      <th>Opciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {loading ? (
-      <tr>
-        <td colSpan="4">Cargando...</td>
-      </tr>
-    ) : currentGuardians.length === 0 ? (
-      <tr>
-        <td colSpan="4">Sin tutores disponibles</td>
-      </tr>
-    ) : (
-      currentGuardians.map((guardian, i) => (
-        <tr key={i}>
-          <td>{guardian.firstName} {guardian.lastName}</td>
-          <td><span className="dob-tag">{guardian.phone}</span></td>
-          <td>{guardian.email}</td>
-          <td>
-            <div className="options">
-              <button className="btnOp">
-                <img 
-                  src={`${process.env.PUBLIC_URL}/icons/9.png`} 
-                  alt="Ver" className="iconOpt"
-                  onClick={() => handleView(guardian)}
-                />
-              </button>
-              <button className="btnOp">
-                <img
-                  src={`${process.env.PUBLIC_URL}/icons/6.png`}
-                  alt="Editar" className="iconOpt"
-                  onClick={() => handleEdit(guardian)}
-                />
-              </button>
-              <button className="btnOp">
-                <img
-                  src={`${process.env.PUBLIC_URL}/icons/5.png`} 
-                  alt="Eliminar" className="iconOpt" 
-                  onClick={() => handleDelete(guardian)}
-                />
-              </button>
-            </div>
-          </td>
-        </tr>
-      ))
-    )}
-  </tbody>
-</table>
+        {/* {Tabla padres} */}
+      <table className="students-table">
+        <thead>
+          <tr>
+            <th>Tutor</th>
+            <th>Teléfono</th>
+            <th>Alumno</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
+            <tr>
+              <td colSpan="4">Cargando...</td>
+            </tr>
+          ) : currentGuardians.length === 0 ? (
+            <tr>
+              <td colSpan="4">Sin tutores disponibles</td>
+            </tr>
+          ) : (
+            currentGuardians.map((guardian, i) => (
+              <tr key={i}>
+                <td>{guardian.firstName} {guardian.lastName}</td>
+                <td><span className="dob-tag">{guardian.phone}</span></td>
+                <td>{guardian.email}</td>
+                <td>
+                  <div className="options">
+                    <button className="btnOp">
+                      <img 
+                        src={`${process.env.PUBLIC_URL}/icons/9.png`} 
+                        alt="Ver" className="iconOpt"
+                        onClick={() => handleView(guardian)}
+                      />
+                    </button>
+                    <button className="btnOp">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/icons/6.png`}
+                        alt="Editar" className="iconOpt"
+                        onClick={() => handleEdit(guardian)}
+                      />
+                    </button>
+                    <button className="btnOp">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/icons/5.png`} 
+                        alt="Eliminar" className="iconOpt" 
+                        onClick={() => handleDelete(guardian)}
+                      />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+        {/* {paguinado} */}
+      <div className="pagination">
+        <span>Página</span>
+        {[...Array(totalPages).keys()].map((n) => (
+          <span
+            key={n + 1}
+            className={`page-number ${currentPage === n + 1 ? "active" : ""}`}
+            onClick={() => setCurrentPage(n + 1)}
+          >
+            {n + 1}
+          </span>
+        ))}
+      </div>
 
-<div className="pagination">
-  <span>Página</span>
-  {[...Array(totalPages).keys()].map((n) => (
-    <span
-      key={n + 1}
-      className={`page-number ${currentPage === n + 1 ? "active" : ""}`}
-      onClick={() => setCurrentPage(n + 1)}
-    >
-      {n + 1}
-    </span>
-  ))}
-</div>
-
-
+      {/* {Modal ver info de padre} */}
       {showViewModal && selectedGuardian && (
           <div className="modal-overlay">
           <div className="modal-content">
@@ -404,7 +405,7 @@ const totalPages = Math.ceil(guardians.length / itemsPerPage);
         </div>
         )}
 
-
+      {/* {Modal editar info de padre} */}
         {showEditModal && selectedGuardian && (
           <div className="modal-overlay">
             <div className="modal-content">
@@ -439,8 +440,8 @@ const totalPages = Math.ceil(guardians.length / itemsPerPage);
             </div>
           </div>
         )}
-
-
+      
+      {/* {Modal eliminar un padre} */}
         {showDeleteModal && selectedGuardian && (
           <div className="modal-overlay">
             <div className="modal-content">

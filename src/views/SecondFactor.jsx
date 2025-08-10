@@ -3,7 +3,9 @@ import '../styles/RecoverCode.css';
 import api from '../Api/axiosInstance.js';
 
 function SecondFactor({ setView }) {
+
   const [codes, setCodes] = useState(new Array(6).fill(''));
+  const [message, setMessage] = useState("");
   const [error, setError] = useState('');
   const inputsRef = useRef([]);
 
@@ -24,16 +26,16 @@ function SecondFactor({ setView }) {
     }
   };
 
-const handleSubmit = async () => {
-  const code = codes.join('');
-  if (code.length !== 6) {
-    setError('Código incompleto');
-    return;
-  }
+  //Verificar el codigo
+  const handleSubmit = async () => {
+    const code = codes.join('');
+    if (code.length !== 6) {
+      setError('Código incompleto');
+      return;
+    }
 
   try {
     const temporaryToken = localStorage.getItem('temporaryToken');
-
     const response = await api.post("/api1/users/verify-2fa", {
       code,
       temporaryToken,
@@ -56,20 +58,38 @@ const handleSubmit = async () => {
     const message = error.response?.data?.message || "Error al verificar código";
     setError(message);
   }
-};
+  };
+
+   //Reenviar el codigo
+  const handleResendCode = async () => {
+    try {
+    const email = localStorage.getItem("recoveryEmail"); // o de donde obtengas el email
+    console.log(email);
+      if (!email) {
+        setError("No se encontró el correo del usuario.");
+        return;
+      }
+      setMessage("Se ha enviado un nuevo código a tu correo.");
+      setError(""); // limpia errores previos
+
+      setTimeout(() => {
+        setMessage(""); // limpia el mensaje después de 10 segundos
+      }, 3000);
+      const response = await api.post("/api1/users/resend-2fa", { email });
+    } catch (error) {
+    const message = error.response?.data?.message || error.message || "Error en el envío de código";
+    setError(message);
+    }
+  };
 
   return (
     <div className="verification-container">
       <div className="verification-box">
-        <button className="cancel-button" onClick={() => setView("login")}>
-          <img src={`${process.env.PUBLIC_URL}/icons/5.png`} alt="Cancelar" />
-        </button>
         <img src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="logo" className="verification-logo" />
         <h2 className="verification-title">Código De Verificación</h2>
         <p className="verification-instructions">
           INGRESA LOS 6 DÍGITOS DE SEGURIDAD ENVIADOS A TU CORREO
         </p>
-
         <div className="code-inputs">
           {codes.map((code, index) => (
             <input
@@ -84,9 +104,10 @@ const handleSubmit = async () => {
             />
           ))}
         </div>
-
+        {message && <p className="success-message">{message}</p>}
         {error && <p className="error-text">{error}</p>}
-        <button className="submit-btn" onClick={handleSubmit}>Enviar</button>
+        <button className="submit-btn" onClick={handleSubmit}>Enviar</button><br />
+        <button className="submit-btn" onClick={handleResendCode}>Renviar Codigo</button>
       </div>
     </div>
   );

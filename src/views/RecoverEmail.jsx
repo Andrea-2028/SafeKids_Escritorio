@@ -3,10 +3,12 @@ import api from "../Api/axiosInstance"; // Asegúrate que esta sea tu instancia 
 import "../styles/RecoverEmail.css";
 
 function RecoverEmail({ setView }) {
+
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  //Verificar el correo
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -17,9 +19,7 @@ function RecoverEmail({ setView }) {
 
     try {
       const res = await api.post("/api1/users/reset-password", { email });
-
       if (res.data.success) {
-        setMessage("Se ha enviado un código a tu correo.");
         setError("");
         localStorage.setItem("recoveryEmail", email); // guarda el correo para usarlo en el siguiente paso
         setTimeout(() => setView("recoverCode"), 1000); // cambia de vista después de 1s
@@ -43,12 +43,10 @@ function RecoverEmail({ setView }) {
           className="login-image"
         />
       </div>
-
       <div className="login-right">
         <form className="login-form" onSubmit={handleSubmit}>
           <h2>Recuperación</h2>
           <p className="instruction">Favor de ingresar tu correo registrado</p>
-
           <input
             type="email"
             placeholder="Correo Electrónico"
@@ -56,14 +54,11 @@ function RecoverEmail({ setView }) {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-
           {message && <p className="success-message">{message}</p>}
           {error && <p className="error-message">{error}</p>}
-
           <a href="#" className="forgot-password" onClick={() => setView("login")}>
             Iniciar Sesión
           </a>
-
           <button type="submit">Enviar</button>
         </form>
       </div>

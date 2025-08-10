@@ -51,34 +51,34 @@ function AuthorizedPeople() {
   });
 
 //Funcion mostrar estudiantes
-useEffect(() => {
-  if (!schoolId) return;
+  useEffect(() => {
+    if (!schoolId) return;
 
-  const fetchStudents = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get(`/api1/students/seek-school/${schoolId}/${selectedGroup}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const fetchStudents = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get(`/api1/students/seek-school/${schoolId}/${selectedGroup}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (res.data.success) {
-        console.log("Estudiantes encontrados:", res.data.data);
-        setStudents(res.data.data);
-      } else {
+        if (res.data.success) {
+          console.log("Estudiantes encontrados:", res.data.data);
+          setStudents(res.data.data);
+        } else {
+          setStudents([]);
+        }
+      } catch (error) {
+        console.error("Error obteniendo alumnos:", error);
         setStudents([]);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error obteniendo alumnos:", error);
-      setStudents([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchStudents();
-}, [schoolId, selectedGroup]);
+    fetchStudents();
+  }, [schoolId, selectedGroup]);
 
 
 //Funcion mostrar personas autorizadas
@@ -121,21 +121,21 @@ useEffect(() => {
 }, [schoolId]);
 
 // Lógica de paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
 
-const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 7;
-
-const indexOfLastItem = currentPage * itemsPerPage;
-const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-const currentAuthPeople = authPeoples.slice(indexOfFirstItem, indexOfLastItem);
-const totalPages = Math.ceil(authPeoples.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAuthPeople = authPeoples.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(authPeoples.length / itemsPerPage);
 
   return (
     <Layout title="Gestión De Personal Autorizado">
     <div className="Stcontainer">
       <div className="headerST">
+        {/* {filtro por alumnos} */}
         <div className="students-controls">
-<div className="custom-select">
+          <div className="custom-select">
             <div className="custom-searchable-input">
               <input
                 type="text"
@@ -219,9 +219,10 @@ const totalPages = Math.ceil(authPeoples.length / itemsPerPage);
                           )}
                         </div>
                       )}
-                    </div>
+          </div>
         </div>
       </div>
+      {/* {Tabla Personas autorizadas} */}
       <table className="students-table">
         <thead>
           <tr>
@@ -251,20 +252,21 @@ const totalPages = Math.ceil(authPeoples.length / itemsPerPage);
         </tbody>
       </table>
 
-<div className="pagination">
-  <span>Página</span>
-  {[...Array(totalPages).keys()].map((n) => (
-    <span
-      key={n + 1}
-      className={`page-number ${currentPage === n + 1 ? "active" : ""}`}
-      onClick={() => setCurrentPage(n + 1)}
-    >
-      {n + 1}
-    </span>
-  ))}
-</div>
+      {/* {Paguinado} */}
+      <div className="pagination">
+        <span>Página</span>
+        {[...Array(totalPages).keys()].map((n) => (
+          <span
+            key={n + 1}
+            className={`page-number ${currentPage === n + 1 ? "active" : ""}`}
+            onClick={() => setCurrentPage(n + 1)}
+          >
+            {n + 1}
+          </span>
+        ))}
+      </div>
 
-
+      {/* {Modal ver mas informacion} */}
       {showViewModal && selectedAuthPeople && (
           <div className="modal-overlay">
           <div className="modal-content">

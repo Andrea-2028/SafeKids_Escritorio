@@ -4,38 +4,36 @@ import { useEffect, useState } from "react";
 import api from '../Api/axiosInstance.js'; // Asegúrate que la ruta sea correcta
 function Home() {
 
-    const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
   
+ //Mostrar el nombre en el menu
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-useEffect(() => {
-  const fetchProfile = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+      try {
+        const response = await api.get("/api1/users/my-profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
 
-    try {
-      const response = await api.get("/api1/users/my-profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
+        const data = response.data;
 
-      const data = response.data;
-
-      if (data.success) {
-        setUser(data.data);
-      } else {
-        console.error("No se pudo obtener el perfil:", data.message);
+        if (data.success) {
+          setUser(data.data);
+        } else {
+          console.error("No se pudo obtener el perfil:", data.message);
+        }
+      } catch (error) {
+        console.error("Error al obtener perfil:", error.response?.data || error.message);
       }
-    } catch (error) {
-      console.error("Error al obtener perfil:", error.response?.data || error.message);
-    }
-  };
+    };
 
-  fetchProfile();
-}, []);
-
-
+    fetchProfile();
+  }, []);
 
   return (
     <div className="home">

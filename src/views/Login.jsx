@@ -9,6 +9,7 @@ function Login({ setView }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  //logica login
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,15 +22,9 @@ function Login({ setView }) {
             email,
             password,
           });
-
       const data = response.data;
-          
-          // Guardar el temporaryToken en localStorage
-      localStorage.setItem("temporaryToken", data.temporaryToken);
-      // Guardamos el usuario si es necesario
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("recoveryEmail", email); 
       // Cambiamos de vista
-
       setView("secondFactor");
     } catch (error) {
       const message = error.response?.data?.message || error.message || "Error al iniciar sesión.";
@@ -44,12 +39,10 @@ function Login({ setView }) {
         <div className="logo">Safe Kids</div>
         <img src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="Logo" className="login-image" />
       </div>
-
       <div className="login-right">
         <form className="login-form" onSubmit={handleSubmit}>
           <h2>Ingresar</h2>
           <p className="instruction">Favor De Llenar Los Campos Solicitados</p>
-
           <input
             type="email"
             placeholder="Correo Electrónico"
@@ -57,7 +50,6 @@ function Login({ setView }) {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-
           <div className="password-container">
             <input
               type={showPassword ? "text" : "password"}
@@ -71,16 +63,21 @@ function Login({ setView }) {
               onClick={() => setShowPassword(!showPassword)}
               title="Mostrar/ocultar contraseña"
             >
-              {showPassword ? "🙈" : "👁️"}
+              <img
+                src={
+                  showPassword
+                    ? `${process.env.PUBLIC_URL}/icons/ojo-cerrado.png`
+                    : `${process.env.PUBLIC_URL}/icons/ojo-abierto.png`
+                }
+                alt="Icono de visibilidad"
+                className="icono-ojo"
+              />
             </span>
           </div>
-
           <a href="#" className="forgot-password" onClick={() => setView("recoverEmail")}>
             ¿Olvidaste tu contraseña?
           </a>
-
           <button type="submit">Ingresar</button>
-
           {errorMsg && <p className="error-msg">{errorMsg}</p>}
         </form>
       </div>

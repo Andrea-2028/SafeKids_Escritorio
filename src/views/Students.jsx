@@ -38,154 +38,154 @@ function Students({ setView }) {
   const totalPages = Math.ceil(students.length / studentsPerPage);
 
   // Obtener los grupos cuando ya tengamos schoolId
-useEffect(() => {
-  if (!schoolId) return;
+  useEffect(() => {
+    if (!schoolId) return;
 
-  const fetchGroups = async () => {
-    try {
-      const res = await api.get(`/api1/groups/${schoolId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const fetchGroups = async () => {
+      try {
+        const res = await api.get(`/api1/groups/${schoolId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      const data = res.data;
-      if (data.success) {
-        setGroups(data.gradeSections);
+        const data = res.data;
+        if (data.success) {
+          setGroups(data.gradeSections);
+        }
+      } catch (error) {
+        console.error("Error obteniendo grupos:", error.response?.data || error.message);
       }
-    } catch (error) {
-      console.error("Error obteniendo grupos:", error.response?.data || error.message);
-    }
-  };
+    };
 
-  fetchGroups();
-}, [schoolId]);
+    fetchGroups();
+  }, [schoolId]);
 
 
   // Obtener los alumnos cada vez que se cambie de grupo
-useEffect(() => {
-  if (!schoolId) return;
+  useEffect(() => {
+    if (!schoolId) return;
 
-  const fetchStudents = async () => {
-    setLoading(true);
+    const fetchStudents = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get(`/api1/students/seek-school/${schoolId}/${selectedGroup}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = res.data;
+        if (data.success) {
+          console.log("Estudiantes encontrados:", data.data);
+          setStudents(data.data);
+        }
+      } catch (error) {
+        console.error("Error obteniendo alumnos:", error.response?.data || error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, [schoolId, selectedGroup]);
+
+
+//Buscar a los padres del niño
+  const fetchGuardiansBySchoolAndStudent = async (schoolId, studentId) => {
     try {
-      const res = await api.get(`/api1/students/seek-school/${schoolId}/${selectedGroup}`, {
+      const res = await api.get(`/api1/guardians/${schoolId}/${studentId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       const data = res.data;
+
       if (data.success) {
-        console.log("Estudiantes encontrados:", data.data);
-        setStudents(data.data);
+        console.log("Mensaje:", data.message);
+        console.log("Estudiantes:", data.students);
+        console.log("Tutores:", data.data);
+        setGuardians(data.data);
+      } else {
+        console.warn("Error:", data.message);
       }
     } catch (error) {
-      console.error("Error obteniendo alumnos:", error.response?.data || error.message);
-    } finally {
-      setLoading(false);
+      console.error("Error al consultar tutores:", error.response?.data || error.message);
     }
   };
 
-  fetchStudents();
-}, [schoolId, selectedGroup]);
-
-
-//Buscar a los padres del niño
-const fetchGuardiansBySchoolAndStudent = async (schoolId, studentId) => {
-  try {
-    const res = await api.get(`/api1/guardians/${schoolId}/${studentId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = res.data;
-
-    if (data.success) {
-      console.log("Mensaje:", data.message);
-      console.log("Estudiantes:", data.students);
-      console.log("Tutores:", data.data);
-      setGuardians(data.data);
-    } else {
-      console.warn("Error:", data.message);
-    }
-  } catch (error) {
-    console.error("Error al consultar tutores:", error.response?.data || error.message);
-  }
-};
-
 
 // Editar Grupo
-const handleEditGroup = async () => {
-  try {
-    const res = await api.put(
-      `/api1/students/edit-group/${selectedStudent}`,
-      { gradeSection: selectedGroup },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+  const handleEditGroup = async () => {
+    try {
+      const res = await api.put(
+        `/api1/students/edit-group/${selectedStudent}`,
+        { gradeSection: selectedGroup },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = res.data;
+
+      if (data.success) {
+        setMessage("Grupo actualizado exitosamente");
+        setError("");
+        setTimeout(() => {
+          setShowEditModal(false);
+          setSelectedStudent(null);
+          setSelectedGroup("All");
+        }, 1500);
+      } else {
+        setMessage("");
+        setError("Error al actualizar grupo");
       }
-    );
-
-    const data = res.data;
-
-    if (data.success) {
-      setMessage("Grupo actualizado exitosamente");
-      setError("");
-      setTimeout(() => {
-        setShowEditModal(false);
-        setSelectedStudent(null);
-        setSelectedGroup("All");
-      }, 1500);
-    } else {
+    } catch (error) {
+      setError("Ocurrió un error al conectar con el servidor");
       setMessage("");
-      setError("Error al actualizar grupo");
     }
-  } catch (error) {
-    setError("Ocurrió un error al conectar con el servidor");
-    setMessage("");
-  }
-};
+  };
 
 
 // Eliminar estudiante
-const confirmDelete = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    const studentId = selectedStudent.student.id;
+  const confirmDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const studentId = selectedStudent.student.id;
 
-    const res = await api.delete(`/api1/students/delete/${studentId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+      const res = await api.delete(`/api1/students/delete/${studentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    const data = res.data;
+      const data = res.data;
 
-    if (res.status === 200 && data.success) {
-      setMessage("Alumno Eliminado exitosamente");
-      setError("");
+      if (res.status === 200 && data.success) {
+        setMessage("Alumno Eliminado exitosamente");
+        setError("");
 
-      setStudents((prev) =>
-        prev.filter((s) => s.student.id !== selectedStudent.student.id)
-      );
+        setStudents((prev) =>
+          prev.filter((s) => s.student.id !== selectedStudent.student.id)
+        );
 
-      setTimeout(() => {
-        setShowDeleteModal(false);
-        setSelectedStudent(null);
-      }, 1500);
-    } else {
+        setTimeout(() => {
+          setShowDeleteModal(false);
+          setSelectedStudent(null);
+        }, 1500);
+      } else {
+        setMessage("");
+        setError("Error al actualizar grupo");
+      }
+    } catch (error) {
+      setError("Ocurrió un error al conectar con el servidor");
       setMessage("");
-      setError("Error al actualizar grupo");
     }
-  } catch (error) {
-    setError("Ocurrió un error al conectar con el servidor");
-    setMessage("");
-  }
-};
+  };
 
 
 //Modals logica
@@ -217,7 +217,7 @@ const confirmDelete = async () => {
   setSelectedGroup("All");
   setMessage("");
   setError("");
-};
+  };
 
   const handleDelete = (student) => {
     setSelectedStudent(student);
@@ -234,58 +234,57 @@ const confirmDelete = async () => {
     <Layout title="Gestión De Alumnos">
       <div className="Stcontainer">
         <div className="headerST">
+          {/* {filtro por alumnos} */}
           <div className="students-controls">
-<div className="custom-select">
-  <div className="select-header" onClick={() => setGroupDropdownOpen(!groupDropdownOpen)}>
-    <span>{selectedGroup === "All" ? "Todos los grupos" : selectedGroup}</span>
-    <img
-      src={`${process.env.PUBLIC_URL}/icons/triangulo.png`}
-      alt="Abrir"
-      className={`select-arrow ${groupDropdownOpen ? "rotate" : ""}`}
-    />
-  </div>
-
-{groupDropdownOpen && (
-  <div className="select-options">
-    <div
-      className="select-option"
-      onClick={() => {
-        setSelectedGroup("All");
-        setGroupDropdownOpen(false);
-      }}
-    >
-      Todos los grupos
-    </div>
-
-    {groups.length > 0 ? (
-      groups.map((group, index) => (
-        <div
-          key={index}
-          className="select-option"
-          onClick={() => {
-            setSelectedGroup(group);
-            setGroupDropdownOpen(false);
-          }}
-        >
-          {group}
-        </div>
-      ))
-    ) : (
-      <div className="select-option disabled">
-        <strong>No hay grupos disponibles</strong>
-        <div className="group-text">Verifica que la escuela tenga grupos asignados</div>
-      </div>
-    )}
-  </div>
-)}
-</div>
-
+            <div className="custom-select">
+              <div className="select-header" onClick={() => setGroupDropdownOpen(!groupDropdownOpen)}>
+                <span>{selectedGroup === "All" ? "Todos los grupos" : selectedGroup}</span>
+                <img
+                  src={`${process.env.PUBLIC_URL}/icons/triangulo.png`}
+                  alt="Abrir"
+                  className={`select-arrow ${groupDropdownOpen ? "rotate" : ""}`}
+                />
+              </div>
+            {groupDropdownOpen && (
+              <div className="select-options">
+                <div
+                  className="select-option"
+                  onClick={() => {
+                    setSelectedGroup("All");
+                    setGroupDropdownOpen(false);
+                  }}
+                >
+                  Todos los grupos
+                </div>
+                
+                {groups.length > 0 ? (
+                  groups.map((group, index) => (
+                    <div
+                      key={index}
+                      className="select-option"
+                      onClick={() => {
+                        setSelectedGroup(group);
+                        setGroupDropdownOpen(false);
+                      }}
+                    >
+                      {group}
+                    </div>
+                  ))
+                ) : (
+                  <div className="select-option disabled">
+                    <strong>No hay grupos disponibles</strong>
+                    <div className="group-text">Verifica que la escuela tenga grupos asignados</div>
+                  </div>
+                )}
+              </div>
+            )}
+            </div>
             <button onClick={() => setView("addStudent")} className="add-button">
               Agregar Alumno
             </button>
           </div>
         </div>
-
+        {/* {Tabla Alumnos} */}
         <table className="students-table">
           <thead>
             <tr>
@@ -340,19 +339,19 @@ const confirmDelete = async () => {
           </tbody>
         </table>
         
-<div className="pagination">
-  <span>Página:</span>
-  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-    <span
-      key={page}
-      className={`page-number ${page === currentPage ? 'active' : ''}`}
-      onClick={() => setCurrentPage(page)}
-    >
-      {page}
-    </span>
-  ))}
-</div>
-
+        {/* {Paginado} */}
+        <div className="pagination">
+          <span>Página:</span>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <span
+              key={page}
+              className={`page-number ${page === currentPage ? 'active' : ''}`}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </span>
+          ))}
+        </div>
 
         {/* View Modal */}
         {showViewModal && selectedStudent && (
