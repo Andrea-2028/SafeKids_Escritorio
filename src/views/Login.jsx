@@ -22,6 +22,11 @@ function Login({ setView }) {
             password,
           });
       const data = response.data;
+      //console.log(data);
+      // Guardar el temporaryToken en localStorage
+      //console.log(data.temporaryToken);
+      localStorage.setItem("temporaryToken", data.temporaryToken);
+      
       localStorage.setItem("recoveryEmail", email); 
       // Cambiamos de vista
       setView("secondFactor");

@@ -79,13 +79,7 @@
   width: 100%;
 }
 
-.eye-icon {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  cursor: pointer;
-  font-size: 16px;
-}
+
 
 /* Link de olvidar contraseña */
 .forgot-password {

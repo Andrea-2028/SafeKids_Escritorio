@@ -36,6 +36,7 @@ function SecondFactor({ setView }) {
 
   try {
     const temporaryToken = localStorage.getItem('temporaryToken');
+    console.log(temporaryToken);
     const response = await api.post("/api1/users/verify-2fa", {
       code,
       temporaryToken,
