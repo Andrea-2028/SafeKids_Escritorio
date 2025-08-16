@@ -275,14 +275,12 @@ useEffect(() => {
               <div className="student-info2-1">
                 <strong>Nombre:</strong>
                 <strong>Apellido:</strong>
-                <strong>Correo:</strong>
                 <strong>Telefono:</strong>
                 <strong>Alumnos:</strong>
               </div>
               <div className="student-info2-2">
                 <label> {selectedAuthPeople.firstName}</label>
                 <label> {selectedAuthPeople.lastName}</label>
-                <label>{selectedAuthPeople.email}</label>
                 <label>{selectedAuthPeople.phone}</label>
                 <label >{selectedAuthPeople.studdents}</label>
               </div>
@@ -303,6 +301,7 @@ useEffect(() => {
           </div>
         </div>
         )}
+        
     </div>
     </Layout>
   );

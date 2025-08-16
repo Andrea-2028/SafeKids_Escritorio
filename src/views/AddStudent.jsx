@@ -15,6 +15,9 @@ function AddStudent({ setView }) {
   const schoolId = school?.id;
   const studentId = 'ALL'; 
 
+  //boton funcion
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const [searchTerm1, setSearchTerm1] = useState('');
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [selectedTutor1, setSelectedTutor1] = useState(null);
@@ -98,6 +101,7 @@ function AddStudent({ setView }) {
  //funcion crear
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsDisabled(true); // bloquea el botón
 
     if (!selectedTutor1 || !selectedTutor1.id) {
       alert("Selecciona al menos un tutor");
@@ -418,7 +422,7 @@ function AddStudent({ setView }) {
             {message && <p className="success-messageEdit">{message}</p>}
             {error && <p className="error-messageEdit">{error}</p>}
           <div className="form-actions">
-            <button type="submit" className="add-button-user">Añadir Alumno</button>
+            <button type="submit" className="add-button-user" disabled={isDisabled}>Añadir Alumno</button>
           </div>
         </form>
       </div>

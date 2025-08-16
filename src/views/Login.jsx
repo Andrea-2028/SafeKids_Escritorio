@@ -20,7 +20,11 @@ function Login({ setView }) {
           const response = await api.post("/api1/users/login", {
             email,
             password,
-          });
+          },{
+          headers: {
+            'X-App-Type': 'Desktop'
+          }
+        });
       const data = response.data;
       //console.log(data);
       // Guardar el temporaryToken en localStorage

@@ -23,6 +23,9 @@ function AddGuardian({ setView }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  //boton accion
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -35,6 +38,7 @@ function AddGuardian({ setView }) {
     e.preventDefault();
     setError("");
     setMessage("");
+    setIsDisabled(true); // bloquea el botón
 
     const formData = new FormData();
     formData.append("firstName", firstName);
@@ -98,9 +102,9 @@ function AddGuardian({ setView }) {
       formData2.append("lastName", res.data.data.lastName);
       formData2.append("file", photo); // ya es un archivo
 
-      /* for (let pair of formData2.entries()) {
+       for (let pair of formData2.entries()) {
       console.log(`${pair[0]}:`, pair[1]);
-      } */
+      }
       
       //Usamos la api2 para crear la carpeta y para guardar la imagen
       try {
@@ -276,7 +280,7 @@ function AddGuardian({ setView }) {
             {message && <p className="success-messageEdit">{message}</p>}
             {error && <p className="error-messageEdit">{error}</p>}
           <div className="form-actions">
-            <button type="submit" className="add-button-user">Añadir Tutor</button>
+            <button type="submit" className="add-button-user" disabled={isDisabled}>Añadir Tutor</button>
           </div>
         </form>
       </div>

@@ -11,12 +11,14 @@ function EditProfile({ setView }) {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
+  const school = JSON.parse(localStorage.getItem("school"));
+  const schoolId = school?.id;
+
  //Funcion traer informacion de Perfil
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
-
       try {
         const response = await api.get("/api1/users/my-profile", {
           headers: {
@@ -84,7 +86,11 @@ function EditProfile({ setView }) {
     <Layout>
       <div className="imageprofile">
         <img
-          src={`${process.env.PUBLIC_URL}/img/icono.jpg`}
+          src={`https://apidev.safekids.site/imagenes/${schoolId}/USERS/${user?.profilePhoto}`}
+          onError={(e) => {
+            e.target.onerror = null; // evita un bucle si también falla la imagen por defecto
+            e.target.src = `${process.env.PUBLIC_URL}/img/logo.png`;
+          }}
           alt="Avatar"
           className="profile-avatar"
         />

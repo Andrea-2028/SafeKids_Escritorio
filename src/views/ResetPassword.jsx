@@ -61,6 +61,7 @@ function RecoverEmail({ setView }) {
 
       <div className="login-right">
         <form className="login-form" onSubmit={handleSubmit}>
+          <h2>Recuperar Contraseña</h2>
           <div className="password-container">
             <input
               type={showPassword ? "text" : "password"}
