@@ -16,27 +16,17 @@ function Exit2({ setView }) {
   const [guardianData1, setGuardianData1] = useState(null);
   const [guardianData, setGuardianData] = useState(null);
 
-  const [guardianDataRecibido, setGuardianDataRecibido] = useState(null);
-  const [archivo, setArchivo] = useState(null);
-  const [tipo, setTipo] = useState(null);
-
 
   const [studentData, setStudentData] = useState(null);
-
-  const [showExitModal, setShowExitModal] = useState(false)
+  const [showExitModal, setShowExitModal] = useState(false);
 
    //Modal padre o extra
   const [showViewModalAut, setShowViewModalAut] = useState(false);
 
-  const handleStudentClick = (student) => {
-  setSelectedStudent(student);
-  setShowViewModal(true);
-};
-
-  const handleCloseViewModal = () => {
-    setShowViewModal(false);
-    setShowExitModal(false);
-  };
+  //Modal estudiante
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [guardians, setGuardians] = useState([]);
 
   const handleExit = () => {
     setShowExitModal(true);
@@ -56,7 +46,8 @@ function Exit2({ setView }) {
   //Para cuando cierre el modal del padre y no lo encuentre
   const setShowViewModalTutorCorrect = () => {
   setShowViewModalAut(false);
-  //Aqui debe de buscar a los niño
+
+   //Aqui comenzamos a buscar a los niños
   SegundaBusqueda ();
 
 };
@@ -70,29 +61,28 @@ const Inicio = () => {
 
   // Abrir conexión SSE primero
   const eventSource = new EventSource(`http://159.223.195.148:8001/api2/events/${schoolId}`);
-
   eventSource.onmessage = (event) => {
     const data = JSON.parse(event.data);
     //console.log("Evento SSE recibido:", data);
         try {
       const data = JSON.parse(event.data);
       console.log("Evento SSE recibido:", data);
-
       // Verifica si es el evento deseado
       if (
         data?.type === "recognition_result" &&
         data?.event === "guardian_found"
       ) {
-        console.log("Coincidencia encontrada, guardando datos y ejecutando salida");
-
-        // Guardar los datos recibidos
-        setGuardianDataRecibido(data.data.data);
-        // Guardar archivo y tipo por separado
-        setArchivo(data.data.data.archivo);
-        setTipo(data.data.data.tipo);
-
+        console.log("Coincidencia de GUARDIAN encontrada, guardando datos y ejecutando salida");
         iniciarSalida(data.data.data.archivo, data.data.data.tipo);
+
       }
+      // === Caso: se encontró un STUDENT ===
+    if (data?.type === "recognition_result" && data?.event === "student_found") {
+      console.log("Coincidencia de STUDENT encontrada");
+      // Llamar a tu segunda búsqueda
+      SegundaBusqueda(data.data.data.archivo, data.data.data.tipo);
+
+    }
     } catch (err) {
       console.error("Error parseando evento SSE:", err);
     }
@@ -101,25 +91,18 @@ const Inicio = () => {
     console.error("Error SSE:", error);
     eventSource.close();
   };
-  iniciarSalida();
-  return () => {
-    console.log("Cerrando conexión SSE");
-    eventSource.close();
-  };
 };
 
 useEffect(() => {
   if (!schoolId) return;
   Inicio();
 }, [schoolId]);
-
-
-  // Luego hacer POST para iniciar salida
+  
   async function iniciarSalida(archivoParam, tipoParam) {
     console.log(archivoParam, tipoParam); 
-
     try {
       const token = localStorage.getItem("token");
+      // Luego hacer POST para iniciar bsuqueda del padre o extra
       const res = await api2.post(`/api2/iniciar-salida-escuela/${schoolId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -127,23 +110,15 @@ useEffect(() => {
           },
         });
         
-
       console.log("Salida iniciada:", res.data);
-
       //Con la imagen vamos a sacar el id
-       const archivo2 = archivoParam; // e.g. "30_ANDRESLOPEZ.jpg"
-      const nombreArchivo = archivo2.split(".")[0]; // "30_ANDRESLOPEZ"
-      const numeroStr = nombreArchivo.split("_")[0]; // "30"
+       const archivo2 = archivoParam; // e.g. "5_CARLOSFERNANDEZ.jpg
+      const nombreArchivo = archivo2.split(".")[0]; // "5_CARLOSFERNANDEZ"
+      const numeroStr = nombreArchivo.split("_")[0]; // "5"
       const numberValue = parseInt(numeroStr, 10);
       console.log("Número extraído de la persona:", numberValue); 
 
-      //const numberValue = parseInt(5);
-
-      // Después de obtener tipo desde la API o asignarlo
-      //const tipo = res.data.data.tipo; // ej. "AUTHORIZEDS" o "GUARDIANS"
-      const tipo2 = tipoParam;              // actualiza el state
-      //localStorage.setItem("tipoUser", tipo); // opcional: guardarlo en localStorage
-      
+      //const tipo = res.data.data.tipo; // ej. "AUTHORIZED" o "GUARDIAN"
       setIDUser(numberValue);
       if (tipoParam === "GUARDIAN") {
         // Buscar en padres
@@ -159,18 +134,18 @@ useEffect(() => {
           const parentesco1 = "Padre";
           setparentescoUser(parentesco1);
         
-          //Muestra el modal
+          //Muestra el modal del padre
           setGuardianData1(getRes.data.data);
           setShowViewModalAut(true);
           //lleva info vista
           setGuardianData(getRes.data.data);
           // Después de obtener el parentesco y asignarlo
-          //const tipo = res.data.data.tipo; // ej. "AUTHORIZEDS" o "GUARDIANS"
+          // mandar el tipo a la imagen
           const Tipo3 = tipoParam;
           setTipoUser(Tipo3 + "S");
 
           //Buscamos a sus niños !!!!!!!!!!!!!!!!!!!!
-          const getResStudent = await api.get(`/api1/guardians/check-out-kids/GUARDIANS/${numberValue}`, {
+        const getResStudent = await api.get(`/api1/guardians/check-out-|kids/GUARDIANS/${numberValue}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
@@ -178,11 +153,14 @@ useEffect(() => {
         });
 
         if (getResStudent.data.success) {
-          console.log("Estudiante encontrado:", getResStudent.data.data);
+          console.log("Estudiantes encontrados:", getResStudent.data.data);
           setStudentData(getResStudent.data.data);
+
+          // Luego cambiamos el estado de la busqueda para los niños 
+          //cambia el estado de busqueda a students para SSE
+          const resEs = await api2.post(`/api2/cambiar-a-estudiantes/${schoolId}`);
+          console.log("Salida iniciada:", resEs.data);
         }
-          
-          //setStudentData
          setLoading(false); 
         } else {
           console.error("Error al cargar padre:", getRes.data.message);
@@ -206,7 +184,7 @@ useEffect(() => {
           setTipoUser(Tipo3);
 
            //Buscamos a sus niños !!!!!!!!!!!!!!!!!!!!11
-          const getResStudent = await api.get(`/api1/guardians/check-out-kids/GUARDIANS/${numberValue}`, {
+          const getResStudent = await api.get(`/api1/guardians/check-out-kids/AUTHORIZEDS/${numberValue}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
@@ -216,10 +194,12 @@ useEffect(() => {
         if (getResStudent.data.success) {
           console.log("Estudiante encontrado:", getResStudent.data.data);
           setStudentData(getResStudent.data.data);
+          //cambia el estado de busqueda a students para SSE
+          const resEs = await api2.post(`/api2/cambiar-a-estudiantes/${schoolId}`);
+          console.log("Salida iniciada:", resEs.data);
+
         }
          setLoading(false);
-
-
           } else {
           console.error("Error al buscar al extra:", getRes.data.message);
         }
@@ -232,32 +212,15 @@ useEffect(() => {
     }
   }
 
-
-
-// Estados
-const [guardianData2, setGuardianData2] = useState({ students: [] });
-const [selectedStudent, setSelectedStudent] = useState(null);
-const [showViewModal, setShowViewModal] = useState(false);
-
-const [confirmedStudents, setConfirmedStudents] = useState([]);
-
 // Cuando obtienes la info del estudiante
 // Función para buscar estudiante
-const SegundaBusqueda = async () => {
+const SegundaBusqueda = async (archivoParam, tipoParam) => {
   try {
-    const res3 = await api2.post(`/api2/terminar-salida-escuela${schoolId}`);
-    console.log("Salida acabada:", res3.data);
-    
-    const res = await api2.post(`/api2/cambiar-a-estudiantes/${schoolId}`);
-    console.log("Salida iniciada:", res.data);
-
-    const archivo = res.data.data.archivo;
+    const archivo = archivoParam;
     const nombreArchivo = archivo.split(".")[0];
     const numeroStr = nombreArchivo.split("_")[0];
     const numberValue = parseInt(numeroStr, 10);
-
     console.log("Número extraído del estudiante:", numberValue);
-
     const token = localStorage.getItem("token");
 
     try {
@@ -267,68 +230,51 @@ const SegundaBusqueda = async () => {
           Accept: "application/json",
         },
       });
-
       if (getRes.data.success) {
         const studentData = getRes.data.data.student;
         console.log("Estudiante encontrado:", studentData);
-
-        setSelectedStudent({
-          name: studentData.firstName,
-          lastname: studentData.lastName,
-          dob: studentData.birthDate,
-          photo: studentData.photo,
-          group: getRes.data.data.school_name
-        });
-
-        setShowViewModal(true);
-        setLoading(false);
+        fetchGuardiansBySchoolAndStudent(schoolId, studentData.student.id);
+        setSelectedStudent(studentData);
       } else {
         console.error("Error al cargar estudiante:", getRes.data.message);
-        SegundaBusqueda(); // sigue buscando aunque falle
       }
     } catch (error) {
       const data = error.response?.data;
-
       if (data?.message) {
-        let msg = data.message;
-
-        if (Array.isArray(data.errors)) {
-          msg += "\n\nDetalles:";
-          data.errors.forEach(err => {
-            if (err.studentName && err.error) {
-              msg += `\n- ${err.studentName}: ${err.error}`;
-            }
-          });
-        }
-
-        alert(msg); // Aquí puedes usar un modal en lugar de alert
+        alert("error"); // Aquí puedes usar un modal en lugar de alert
       } else {
         console.error("Error desconocido al obtener estudiante:", error);
       }
-
-      SegundaBusqueda(); // sigue buscando aunque falle
     }
-
   } catch (error) {
     console.error("Error iniciando salida:", error);
-    SegundaBusqueda(); // sigue buscando aunque falle
   }
 };
 
+//Buscar a los padres del niño para mostrarlos en el modal
+  const fetchGuardiansBySchoolAndStudent = async (schoolId, studentId) => {
+    try {
+      const res = await api.get(`/api1/guardians/${schoolId}/${studentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-// Botón Confirmar → agrega estudiante y sigue buscando
-const handleConfirmStudent = () => {
-  setShowViewModal(false);
-  setSelectedStudent(null);
-  SegundaBusqueda(); // seguir buscando
-};
+      const data = res.data;
 
-// Botón Salir → solo cierra modal y sigue buscando
-const handleCloseViewModalStudent = () => {
-  setShowViewModal(false);
-  setSelectedStudent(null);
-  SegundaBusqueda(); // seguir buscando
-};
+      if (data.success) {
+        console.log("Mensaje:", data.message);
+        console.log("Estudiantes:", data.students);
+        console.log("Tutores:", data.data);
+        setGuardians(data.data);
+      } else {
+        console.warn("Error:", data.message);
+      }
+    } catch (error) {
+      console.error("Error al consultar tutores:", error.response?.data || error.message);
+    }
+  };
+
 
 
 //Logica de salida
@@ -509,31 +455,53 @@ const handleConfirm = async () => {
             )}
 
             {/*Modal para mostrar al chamaco */}
-            {showViewModal && selectedStudent && (
-              <div className="modal-overlay">
-                <div className="modal-content">
-                  <h2>Información del estudiante</h2>
-                  <img src={selectedStudent.photo} alt="Foto del estudiante" className="profile-img" />
-                  <p><strong>Nombre:</strong> {selectedStudent.name} {selectedStudent.lastname}</p>
-                  <p><strong>Fecha de nacimiento:</strong> {selectedStudent.dob}</p>
-                  <p><strong>Grupo:</strong> {selectedStudent.group}</p>
+        {showViewModal && selectedStudent && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2>Detalles</h2>
+              <div className="student-info2">
+                <div className="student-info2-1">
+                  <strong>Nombre:</strong><br />
+                  <strong>Apellido:</strong><br />
+                  <strong>Fecha de nacimiento:</strong><br />
+                  <strong>Tutor 1:</strong><br />
+                  <strong>Tutor 2:</strong><br />
+                </div>
+                <div className="student-info2-2">
+                  <label>{selectedStudent.student.firstName}</label><br />
+                  <label>{selectedStudent.student.lastName}</label><br />
+                  <label>{new Date(selectedStudent.student.birthDate).toISOString().split("T")[0]}</label><br />
+                  {guardians.length > 0 ? (
+                    <>
+                      <label>{guardians[0]?.firstName} {guardians[0]?.lastName}</label><br />
+                      <label>{guardians[1]?.firstName} {guardians[1]?.lastName}</label><br />
+                    </>
+                  ) : (
+                    <>
+                      <label>Sin tutor registrado</label><br />
+                      <label>Sin tutor registrado</label><br />
+                    </>
+                  )}
 
-                  <div className="modal-actions" >
-                    <button
-                      onClick={handleCloseViewModalStudent} >
-                      Salir
-                    </button>
-
-                    <button
-                      onClick={handleConfirmStudent}>
-                      Confirmar
-                    </button>
+                </div>
+                <div className="student-info-3">
+                  <div className="imageprofile">
+                  <img src={`https://apidev.safekids.site/imagenes/${schoolId}/STUDENTS/${selectedStudent.student.photo}`} 
+                      onError={(e) => {
+                        e.target.onerror = null; // evita un bucle si también falla la imagen por defecto
+                        e.target.src = `${process.env.PUBLIC_URL}/img/logo.png`;
+                      }}
+                    alt="Avatar" className="profile-avatar" />
                   </div>
+                  <label>{selectedStudent.gradeSection}</label>
                 </div>
               </div>
-            )}
-
-
+              <div className="modal-actions" style={{ justifyContent: "center" }}>
+                <button onClick={handleCloseViewModal} className="btnConAc">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        )}
 
           {showExitModal && (
             <div className="modal-overlay">
