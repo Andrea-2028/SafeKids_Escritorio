@@ -245,6 +245,9 @@ const [confirmedStudents, setConfirmedStudents] = useState([]);
 // Función para buscar estudiante
 const SegundaBusqueda = async () => {
   try {
+    const res3 = await api2.post(`/api2/terminar-salida-escuela${schoolId}`);
+    console.log("Salida acabada:", res3.data);
+    
     const res = await api2.post(`/api2/cambiar-a-estudiantes/${schoolId}`);
     console.log("Salida iniciada:", res.data);
 
@@ -346,7 +349,7 @@ const handleConfirm = async () => {
     console.log("El id de persona que llegó", IDUser);
     console.log("Tipo de persona que llegó", tipoUser);
     console.log("IDs seleccionados:", selectedStudentIds);
-    
+
     const normalizedType =
     tipoUser === "GUARDIANS"
       ? "GUARDIAN"
@@ -508,14 +511,14 @@ const handleConfirm = async () => {
             {/*Modal para mostrar al chamaco */}
             {showViewModal && selectedStudent && (
               <div className="modal-overlay">
-                <div className="modal">
+                <div className="modal-content">
                   <h2>Información del estudiante</h2>
                   <img src={selectedStudent.photo} alt="Foto del estudiante" className="profile-img" />
                   <p><strong>Nombre:</strong> {selectedStudent.name} {selectedStudent.lastname}</p>
                   <p><strong>Fecha de nacimiento:</strong> {selectedStudent.dob}</p>
                   <p><strong>Grupo:</strong> {selectedStudent.group}</p>
 
-                  <div className="modal-buttons">
+                  <div className="modal-actions" >
                     <button
                       onClick={handleCloseViewModalStudent} >
                       Salir
