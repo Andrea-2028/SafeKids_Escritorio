@@ -4,7 +4,7 @@ import "../styles/Exit2.css";
 import "../styles/Students.css";
 import api from "../Api/axiosInstance.js";
 import api2 from "../Api/axiosApi2";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 function Exit2({ setView }) {
   const token = localStorage.getItem("token");
@@ -50,12 +50,16 @@ const [tipoUser, setTipoUser] = useState(null);
 const [IDUser, setIDUser] = useState(null);
 const [parentesco, setparentescoUser] = useState(null);
 
+
+//variables para el evento de sse
+const eventSourceRef = useRef(null);
+
 const Inicio = () => {
-  console.log("=== Inicio de flujo SSE + POST de padres===");
+  console.log("=== Inicio de flujo SSE ===");
   iniciarSalida("5_CARLOSFERNANDEZ.jpg" ,"GUARDIAN");
   // Abrir conexión SSE primero
-  const eventSource = new EventSource(`http://159.223.195.148:8001/api2/events/${schoolId}`);
-  eventSource.onmessage = (event) => {
+  eventSourceRef.current = new EventSource(`http://159.223.195.148:8001/api2/events/${schoolId}`);
+  eventSourceRef.current.onmessage = (event) => {
     const data = JSON.parse(event.data);
     //console.log("Evento SSE recibido:", data);
         try {
@@ -81,9 +85,9 @@ const Inicio = () => {
       console.error("Error parseando evento SSE:", err);
     }
   };
-  eventSource.onerror = (error) => {
+   eventSourceRef.current.onerror = (error) => {
     console.error("Error SSE:", error);
-    eventSource.close();
+    eventSourceRef.current.close();
   };
 };
 
@@ -343,7 +347,17 @@ const handleConfirm = async () => {
     );
     console.log("Salida registrada correctamente al padre sele notifica", res.data);
     console.log("Salida finalizada", res2.data);
-    setShowExitModal(false);
+
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current.onmessage = null;
+      eventSourceRef.current.onerror = null;
+      eventSourceRef.current.onopen = null;
+      console.log("=== Conexión SSE cerrada manualmente ===");
+      eventSourceRef.current = null;
+    }
+
+    setShowExitModal(false); 
     setView("home");
   } catch (error) {
     console.error("Error al realizar el check-out:", error.response?.data || error);
@@ -428,18 +442,18 @@ const handleConfirm = async () => {
                 <strong>¿ Corresponde la persona ?</strong>
                 <div className="student-info2">
                   <div className="student-info2-1">
-                    <strong>Nombre:</strong>
-                    <strong>Apellido:</strong>
-                    <strong>Correo:</strong>
-                    <strong>Telefono:</strong>
-                    <strong>Parentesco:</strong>
+                    <strong>Nombre:</strong><br />
+                    <strong>Apellido:</strong><br />
+                    <strong>Correo:</strong><br />
+                    <strong>Telefono:</strong><br />
+                    <strong>Parentesco:</strong><br />
                   </div>
                   <div className="student-info2-2">
-                    <label> {guardianData1.firstName}</label>
-                    <label> {guardianData1.lastName}</label>
-                    <label>{guardianData1.email}</label>
-                    <label>{guardianData1.phone}</label>
-                    <label >{parentesco}</label>
+                    <label> {guardianData1.firstName}</label><br />
+                    <label> {guardianData1.lastName}</label><br />
+                    <label>{guardianData1.email}</label><br />
+                    <label>{guardianData1.phone}</label><br />
+                    <label >{parentesco}</label><br />
                   </div>
                   <div className="student-info-3">
                     <div className="imageprofile">
@@ -454,7 +468,7 @@ const handleConfirm = async () => {
                       />
                     </div>
                   </div>
-                </div>
+                </div><br />
                 <div className="modal-actions" >
                   <button onClick={setShowViewModalTutorCorrect}  className="btnConAc">Si</button>
                   <button onClick={handleCloseViewModalTutor} className="btnConAc">No</button>
