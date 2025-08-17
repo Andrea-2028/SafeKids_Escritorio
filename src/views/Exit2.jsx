@@ -22,6 +22,11 @@ function Exit2({ setView }) {
 
    //Modal padre o extra
   const [showViewModalAut, setShowViewModalAut] = useState(false);
+    
+  const handleCloseViewModal = () => {
+    setShowViewModalAut(false);
+    setShowExitModal(false);
+  };
 
   //Modal estudiante
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -277,6 +282,8 @@ const SegundaBusqueda = async (archivoParam, tipoParam) => {
 
 
 
+
+
 //Logica de salida
 const [selectedStudentIds, setSelectedStudentIds] = useState([]);
 
@@ -497,7 +504,7 @@ const handleConfirm = async () => {
                 </div>
               </div>
               <div className="modal-actions" style={{ justifyContent: "center" }}>
-                <button onClick={handleCloseViewModal} className="btnConAc">Cerrar</button>
+                <button className="btnConAc">Cerrar</button>
               </div>
             </div>
           </div>
