@@ -1,7 +1,7 @@
 import "../styles/text.css";
 import "../styles/components.css";
 import "../styles/Exit2.css";
-import "../styles/Students.css"
+import "../styles/Students.css";
 import api from "../Api/axiosInstance.js";
 import api2 from "../Api/axiosApi2";
 import { useEffect, useState } from "react";
@@ -23,38 +23,27 @@ function Exit2({ setView }) {
    //Modal padre o extra
   const [showViewModalAut, setShowViewModalAut] = useState(false);
     
-  const handleCloseViewModal = () => {
-    setShowViewModalAut(false);
-    setShowExitModal(false);
-  };
 
   //Modal estudiante
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
   const [guardians, setGuardians] = useState([]);
 
-  const handleExit = () => {
-    setShowExitModal(true);
+    const handleCloseViewModalEstudent = () => {
+    setShowViewModal (false);
   };
 
-  const confirmExit = () => {
-    console.log("Hasta Luego!");
-    setShowExitModal(false);
-  };
-
-  //Para cuando cierre el modal del padre y no lo encuentre
+  //Para cuando cierre el modal del padre y no corresponda
   const handleCloseViewModalTutor = () => {
   setShowViewModalAut(false);
+  setLoading(true); 
   Inicio(); // reinicia el flujo al cerrar modal
 };
 
-  //Para cuando cierre el modal del padre y no lo encuentre
+  //Para cuando cierre el modal del padre y si corresponda
   const setShowViewModalTutorCorrect = () => {
   setShowViewModalAut(false);
-
-   //Aqui comenzamos a buscar a los niños
-  SegundaBusqueda ();
-
+  setShowViewModal (true);
 };
 
 const [tipoUser, setTipoUser] = useState(null);
@@ -63,7 +52,7 @@ const [parentesco, setparentescoUser] = useState(null);
 
 const Inicio = () => {
   console.log("=== Inicio de flujo SSE + POST de padres===");
-
+  iniciarSalida("5_CARLOSFERNANDEZ.jpg" ,"GUARDIAN");
   // Abrir conexión SSE primero
   const eventSource = new EventSource(`http://159.223.195.148:8001/api2/events/${schoolId}`);
   eventSource.onmessage = (event) => {
@@ -78,14 +67,14 @@ const Inicio = () => {
         data?.event === "guardian_found"
       ) {
         console.log("Coincidencia de GUARDIAN encontrada, guardando datos y ejecutando salida");
-        iniciarSalida(data.data.data.archivo, data.data.data.tipo);
+        //iniciarSalida(data.data.data.archivo, data.data.data.tipo);
 
       }
       // === Caso: se encontró un STUDENT ===
     if (data?.type === "recognition_result" && data?.event === "student_found") {
       console.log("Coincidencia de STUDENT encontrada");
       // Llamar a tu segunda búsqueda
-      SegundaBusqueda(data.data.data.archivo, data.data.data.tipo);
+      //SegundaBusqueda(data.data.data.archivo);
 
     }
     } catch (err) {
@@ -104,6 +93,7 @@ useEffect(() => {
 }, [schoolId]);
   
   async function iniciarSalida(archivoParam, tipoParam) {
+    
     console.log(archivoParam, tipoParam); 
     try {
       const token = localStorage.getItem("token");
@@ -150,7 +140,7 @@ useEffect(() => {
           setTipoUser(Tipo3 + "S");
 
           //Buscamos a sus niños !!!!!!!!!!!!!!!!!!!!
-        const getResStudent = await api.get(`/api1/guardians/check-out-|kids/GUARDIANS/${numberValue}`, {
+        const getResStudent = await api.get(`/api1/guardians/check-out-kids/GUARDIANS/${numberValue}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
@@ -164,7 +154,10 @@ useEffect(() => {
           // Luego cambiamos el estado de la busqueda para los niños 
           //cambia el estado de busqueda a students para SSE
           const resEs = await api2.post(`/api2/cambiar-a-estudiantes/${schoolId}`);
-          console.log("Salida iniciada:", resEs.data);
+          console.log("Busqueda los niños por camara inciada:", resEs.data);
+
+          SegundaBusqueda ("1_LAURAFERNANDEZ.jpg")
+
         }
          setLoading(false); 
         } else {
@@ -219,7 +212,7 @@ useEffect(() => {
 
 // Cuando obtienes la info del estudiante
 // Función para buscar estudiante
-const SegundaBusqueda = async (archivoParam, tipoParam) => {
+const SegundaBusqueda = async (archivoParam) => {
   try {
     const archivo = archivoParam;
     const nombreArchivo = archivo.split(".")[0];
@@ -238,8 +231,9 @@ const SegundaBusqueda = async (archivoParam, tipoParam) => {
       if (getRes.data.success) {
         const studentData = getRes.data.data.student;
         console.log("Estudiante encontrado:", studentData);
-        fetchGuardiansBySchoolAndStudent(schoolId, studentData.student.id);
         setSelectedStudent(studentData);
+        fetchGuardiansBySchoolAndStudent(schoolId, studentData.id);
+        
       } else {
         console.error("Error al cargar estudiante:", getRes.data.message);
       }
@@ -266,12 +260,12 @@ const SegundaBusqueda = async (archivoParam, tipoParam) => {
       });
 
       const data = res.data;
-
       if (data.success) {
         console.log("Mensaje:", data.message);
-        console.log("Estudiantes:", data.students);
+        console.log("Estudiante:", data.students);
         console.log("Tutores:", data.data);
         setGuardians(data.data);
+        
       } else {
         console.warn("Error:", data.message);
       }
@@ -280,11 +274,18 @@ const SegundaBusqueda = async (archivoParam, tipoParam) => {
     }
   };
 
-
-
-
-
 //Logica de salida
+
+//mostrar model de salida
+  const handleExit = () => {
+    setShowExitModal(true);
+  };
+
+//Cerrar el modal de salida
+  const handleCloseViewModal = () => {
+    setShowExitModal(false);
+  };
+
 const [selectedStudentIds, setSelectedStudentIds] = useState([]);
 
 const handleCheckboxChange = (studentId, checked) => {
@@ -296,7 +297,7 @@ const handleCheckboxChange = (studentId, checked) => {
     }
   });
 };
-
+//Cerrar el modal de salida y marcar salida de estudiantes con el padre o extra
 const handleConfirm = async () => {
   try {
     console.log("El id de persona que llegó", IDUser);
@@ -342,6 +343,7 @@ const handleConfirm = async () => {
     );
     console.log("Salida registrada correctamente al padre sele notifica", res.data);
     console.log("Salida finalizada", res2.data);
+    setShowExitModal(false);
     setView("home");
   } catch (error) {
     console.error("Error al realizar el check-out:", error.response?.data || error);
@@ -475,9 +477,9 @@ const handleConfirm = async () => {
                   <strong>Tutor 2:</strong><br />
                 </div>
                 <div className="student-info2-2">
-                  <label>{selectedStudent.student.firstName}</label><br />
-                  <label>{selectedStudent.student.lastName}</label><br />
-                  <label>{new Date(selectedStudent.student.birthDate).toISOString().split("T")[0]}</label><br />
+                  <label>{selectedStudent.firstName}</label><br />
+                  <label>{selectedStudent.lastName}</label><br />
+                  <label>{new Date(selectedStudent.birthDate).toISOString().split("T")[0]}</label><br />
                   {guardians.length > 0 ? (
                     <>
                       <label>{guardians[0]?.firstName} {guardians[0]?.lastName}</label><br />
@@ -493,7 +495,7 @@ const handleConfirm = async () => {
                 </div>
                 <div className="student-info-3">
                   <div className="imageprofile">
-                  <img src={`https://apidev.safekids.site/imagenes/${schoolId}/STUDENTS/${selectedStudent.student.photo}`} 
+                  <img src={`https://apidev.safekids.site/imagenes/${schoolId}/STUDENTS/${selectedStudent.photo}`} 
                       onError={(e) => {
                         e.target.onerror = null; // evita un bucle si también falla la imagen por defecto
                         e.target.src = `${process.env.PUBLIC_URL}/img/logo.png`;
@@ -504,7 +506,7 @@ const handleConfirm = async () => {
                 </div>
               </div>
               <div className="modal-actions" style={{ justifyContent: "center" }}>
-                <button className="btnConAc">Cerrar</button>
+                <button className="btnConAc" onClick={handleCloseViewModalEstudent}>Cerrar</button>
               </div>
             </div>
           </div>
