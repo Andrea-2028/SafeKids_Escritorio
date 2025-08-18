@@ -10,6 +10,25 @@
   transition: transform 0.5s ease;
 }
 
+/* Animación typing + blink */
+@keyframes typing {
+  from {
+    width: 0ch;
+  }
+  to {
+    width: 9ch;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: white;
+  }
+}
+
 /* ===== Panel izquierdo ===== */
 .login-left {
   background-color: #0055a4;
@@ -76,7 +95,7 @@
 }
 
 .login-form input {
-  width: 90%;
+  width: 95%;
   padding: 1vw;
   margin-bottom: 1vh;
   border: 1px solid #ccc;

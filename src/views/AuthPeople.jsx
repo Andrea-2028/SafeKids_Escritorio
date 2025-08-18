@@ -223,34 +223,45 @@ useEffect(() => {
         </div>
       </div>
       {/* {Tabla Personas autorizadas} */}
-      <table className="students-table">
-        <thead>
-          <tr>
-            <th>Tutor</th>
-            <th>Telefono</th>
-            <th>Alumno</th>
-            <th>Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentAuthPeople.map((authPeople, i) => (
-            <tr key={i}>
-              <td>{authPeople.firstName} {authPeople.lastName}</td>
-              <td><span className="dob-tag">{authPeople.phone}</span></td>
-              <td>{authPeople.studdents}</td>
-              <td>
-                <div className="options">
-                  <button className="btnOp"><img 
-                    src={`${process.env.PUBLIC_URL}/icons/9.png`} 
-                    alt="Ver" className="iconOpt"
-                    onClick={() => handleView(authPeople)}
-                    /></button> 
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+{/* {Tabla Personas autorizadas} */}
+<table className="students-table">
+  <thead>
+    <tr>
+      <th>Tutor</th>
+      <th>Teléfono</th>
+      <th>Alumno</th>
+      <th>Opciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {currentAuthPeople.length === 0 ? (
+      <tr>
+        <td colSpan="4">Sin personas autorizadas disponibles</td>
+      </tr>
+    ) : (
+      currentAuthPeople.map((authPeople, i) => (
+        <tr key={i}>
+          <td>{authPeople.firstName} {authPeople.lastName}</td>
+          <td><span className="dob-tag">{authPeople.phone}</span></td>
+          <td>{authPeople.studdents}</td>
+          <td>
+            <div className="options">
+              <button className="btnOp">
+                <img 
+                  src={`${process.env.PUBLIC_URL}/icons/9.png`} 
+                  alt="Ver" 
+                  className="iconOpt"
+                  onClick={() => handleView(authPeople)}
+                />
+              </button>
+            </div>
+          </td>
+        </tr>
+      ))
+    )}
+  </tbody>
+</table>
+
 
       {/* {Paguinado} */}
       <div className="pagination">

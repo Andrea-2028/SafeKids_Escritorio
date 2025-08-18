@@ -135,21 +135,29 @@ function AddStudent({ setView }) {
       setError("La fecha de nacimiento es obligatoria.");
       return;
     }
-    const birth = new Date(birthDate); // la fecha ingresada
-    const today = new Date();
 
-    // Fecha máxima permitida (hoy, porque no puede ser futuro)
-    if (birth > today) {
-      setError("La fecha de nacimiento no puede ser mayor a la fecha actual.");
-      return;
-    }
-    // Fecha mínima permitida (hace 12 años exactos desde hoy)
-    const minDate = new Date();
-    minDate.setFullYear(today.getFullYear() - 12);
-    if (birth > minDate) {
-      setError("Debes tener al menos 12 años.");
-      return;
-    }
+    // Función para normalizar fecha (sin hora)
+const toDateOnly = (date) => {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+
+const birth = new Date(birthDate);
+const today = toDateOnly(new Date());
+
+// Validar que no sea futura
+if (birth > today) {
+  setError("La fecha de nacimiento no puede ser mayor a la fecha actual.");
+  return;
+}
+
+// Fecha mínima permitida (12 años atrás desde hoy)
+const minDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate());
+if (birth > minDate) {
+  setError("Debes tener al menos 12 años.");
+  return;
+}
+
+
     if (!gradeSection || gradeSection.length > 50) {
       setError("El grupo es obligatorio y debe tener máximo 50 caracteres.");
       return;
