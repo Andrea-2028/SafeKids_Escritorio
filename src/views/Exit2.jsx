@@ -56,7 +56,7 @@ const eventSourceRef = useRef(null);
 
 const Inicio = () => {
   console.log("=== Inicio de flujo SSE ===");
-  iniciarSalida("5_CARLOSFERNANDEZ.jpg" ,"GUARDIAN");
+  //iniciarSalida("5_CARLOSFERNANDEZ.jpg" ,"GUARDIAN");
   // Abrir conexión SSE primero
   eventSourceRef.current = new EventSource(`http://159.223.195.148:8001/api2/events/${schoolId}`);
   eventSourceRef.current.onmessage = (event) => {
@@ -71,15 +71,20 @@ const Inicio = () => {
         data?.event === "guardian_found"
       ) {
         console.log("Coincidencia de GUARDIAN encontrada, guardando datos y ejecutando salida");
-        //iniciarSalida(data.data.data.archivo, data.data.data.tipo);
+        iniciarSalida(data.data.data.archivo, data.data.data.tipo);
 
       }
+      if(data?.type === "recognition_result" &&
+        data?.event === "authorized_found")
+        {
+          console.log("Coincidencia de Persona Autorizada encontrada, guardando datos y ejecutando salida");
+          iniciarSalida(data.data.data.archivo, data.data.data.tipo);
+        }
       // === Caso: se encontró un STUDENT ===
     if (data?.type === "recognition_result" && data?.event === "student_found") {
       console.log("Coincidencia de STUDENT encontrada");
       // Llamar a tu segunda búsqueda
-      //SegundaBusqueda(data.data.data.archivo);
-
+      SegundaBusqueda(data.data.data.archivo);
     }
     } catch (err) {
       console.error("Error parseando evento SSE:", err);
@@ -160,7 +165,7 @@ useEffect(() => {
           const resEs = await api2.post(`/api2/cambiar-a-estudiantes/${schoolId}`);
           console.log("Busqueda los niños por camara inciada:", resEs.data);
 
-          SegundaBusqueda ("1_LAURAFERNANDEZ.jpg")
+          //SegundaBusqueda ("1_LAURAFERNANDEZ.jpg")
 
         }
          setLoading(false); 

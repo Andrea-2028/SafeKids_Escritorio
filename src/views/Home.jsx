@@ -9,6 +9,7 @@ function Home() {
  //Mostrar el nombre en el menu
   useEffect(() => {
     const fetchProfile = async () => {
+      
       const token = localStorage.getItem("token");
       if (!token) return;
 

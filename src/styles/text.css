@@ -1,34 +1,41 @@
 /* texto de home */
 .home-text {
-   width: auto;
-   max-width: 40%;
-   height: 90%;
+  width: auto;
+  max-width: 40%;
+  height: 90%;
   color: #ffffff;
   margin: 0 auto;
   line-height: 1.4;
+  text-align: center;
 }
 
+/* El título será entre 6% y 10% del ancho de la pantalla */
 .home-text h1 {
-  font-size: 80px;
+  font-size: 5vw; /* 8% del ancho de la pantalla */
   font-family: 'Inter', sans-serif;
-  font-weight: 700; /* Bold */
-  text-shadow: 3px 2px 5px rgba(0, 0, 0, 0.3); /* sombra negra semi-transparente */
+  font-weight: 700;
+  text-shadow: 0.3vw 0.2vw 0.5vw rgba(0, 0, 0, 0.3);
 }
 
+/* Subtítulo más pequeño pero también relativo */
 .home-text h2 {
-  font-size: 20px;
+  font-size: 2.5vw; /* 2.5% del ancho de la pantalla */
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700; /* Bold */
+  font-weight: 700;
 }
+
 .home-text p {
-  font-size: 20px;
+  font-size: 2vw; /* 2% del ancho */
   margin-top: 2%;
   font-family: 'Inter', sans-serif;
 }
+
 .home-text em {
-  font-size: 20px;
+  font-size: 2vw;
   font-family: 'Inter', sans-serif;
 }
+
+
 
 .profile-header h2 {
     font-size: 20px;

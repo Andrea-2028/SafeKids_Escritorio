@@ -1,88 +1,110 @@
+/* ===== Contenedor general ===== */
 .verification-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 2vw;
   background-color: #f2f4f8;
+  box-sizing: border-box;
 }
 
+/* ===== Caja de verificación ===== */
 .verification-box {
-  position: relative;              /* Para que el botón absoluto se posicione sobre este */
+  position: relative;
   background: white;
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 3vw;
+  border-radius: 1vw;
+  box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.1);
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 50vw;
+  height: 50vw;      /* escala con la pantalla */
+  box-sizing: border-box;
 }
 
-
-
+/* Botón de cancelar */
 .cancel-button {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 1.5vw;
+  right: 1.5vw;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 5px;
+  padding: 0.5vw;
   z-index: 10;
 }
 
 .cancel-button img {
-  width: 24px;
-  height: 24px;
+  width: 3vw;
+  height: 3vw;
+  max-width: 24px;
+  max-height: 24px;
 }
 
-
+/* Logo */
 .verification-logo {
-  width: 100px;
-  margin-bottom: 20px;
+  width: 10vw; /* escalable */
+  height: auto;
 }
 
+/* Título */
 .verification-title {
   color: #003366;
   font-weight: bold;
-  font-size: 20px;
-  margin-bottom: 10px;
+  font-size: 4vw; /* escala con pantalla */
+  max-font-size: 20px;
+  margin-bottom: 1vh;
+  text-align: center;
 }
 
+/* Instrucciones */
 .verification-instructions {
-  font-size: 14px;
+  font-size: 2vw;
   color: #999;
-  margin-bottom: 25px;
+  margin-bottom: 3vh;
+  text-align: center;
 }
 
+/* Inputs de código */
 .code-inputs {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 25px;
+  gap: 2vw;
+  margin-bottom: 3vh;
+  width: 100%;
+}
+
+.message{
+  font-size: 2vw;
 }
 
 .code-input {
-  width: 50px;
-  height: 60px;
-  font-size: 26px;
+  flex: 1;
+  width: 50%;        /* ocupa espacio proporcional */
+  aspect-ratio: 1/1.2; /* mantiene proporción altura/anchura */
+  font-size: 3vw;
   font-weight: bold;
   text-align: center;
-  border: 3px solid #0fa3b1;
-  border-radius: 12px;
+  border: 0.3vw solid #0fa3b1;
+  border-radius: 1vw;
   outline: none;
   background-color: #f6f6f6;
+  color: #999;
 }
 
+/* Botones */
 .resend-btn,
 .submit-btn {
   width: 100%;
-  padding: 12px;
-  font-size: 16px;
+  padding: 1vw;
+  font-size: 2vw;
   border: none;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  border-radius: 0.8vw;
+  margin-bottom: 2vh;
   font-weight: bold;
   cursor: pointer;
 }
@@ -95,4 +117,53 @@
 .submit-btn {
   background-color: #0fa3b1;
   color: white;
+}
+
+/* ===== Media Queries ===== */
+@media (max-width: 768px) {
+  .verification-box {
+    width: 90vw;
+    padding: 5vw;
+  }
+
+  .verification-title {
+    font-size: 6vw;
+  }
+
+  .verification-instructions {
+    font-size: 4vw;
+  }
+
+  .code-inputs {
+    gap: 3vw;
+  }
+
+  .code-input {
+    font-size: 6vw;
+  }
+
+  .resend-btn,
+  .submit-btn {
+    font-size: 4vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .verification-title {
+    font-size: 8vw;
+  }
+
+  .verification-instructions {
+    font-size: 5vw;
+  }
+
+  .code-input {
+    font-size: 8vw;
+  }
+
+  .resend-btn,
+  .submit-btn {
+    font-size: 5vw;
+    padding: 3vw;
+  }
 }

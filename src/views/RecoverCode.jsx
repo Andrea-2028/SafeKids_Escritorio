@@ -53,7 +53,7 @@ function RecoverCode({ setView }) {
  const handleResendCode = async () => {
   try {
     const email = localStorage.getItem("recoveryEmail"); // o de donde obtengas el email
-    console.log(email);
+    //console.log(email);
     if (!email) {
       setError("No se encontró el correo del usuario.");
       return;
@@ -93,8 +93,11 @@ function RecoverCode({ setView }) {
             />
           ))}
         </div>
-        {message && <p className="success-message">{message}</p>}
-        {error && <p className="error-message">{error}</p>}
+        <div className='message'>
+          {message && <p className="success-message">{message}</p>}
+          {error && <p className="error-message">{error}</p>}
+        </div>
+        
         <button className="submit-btn" onClick={handleSubmit}>Enviar</button><br />
         <button className="submit-btn" onClick={handleResendCode}>Renviar Codigo</button>
       </div>

@@ -36,7 +36,7 @@ function RecoverEmail({ setView }) {
   return (
     <div className="login-container">
       <div className="login-left">
-        <div className="RecoverEmaillogo">Safe Kids</div>
+        <div className="logo">Safe Kids</div>
         <img
           src={`${process.env.PUBLIC_URL}/img/logo.png`}
           alt="Logo"

@@ -3,7 +3,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./views/Home";
 import Profile from "./views/Profile";
 import EditProfile from "./views/EditProfile";
-import Students from "./views/students";
+import Students from "./views/Students";
 import AddStudent from "./views/AddStudent";
 import Guardians from "./views/Guardians";
 import AddGuardian from "./views/AddGuardian";

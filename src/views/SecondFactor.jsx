@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import '../styles/RecoverCode.css';
+import '../styles/Login.css';
 import api from '../Api/axiosInstance.js';
 
 function SecondFactor({ setView }) {
@@ -36,7 +36,7 @@ function SecondFactor({ setView }) {
 
   try {
     const temporaryToken = localStorage.getItem('temporaryToken');
-    console.log(temporaryToken);
+    //console.log(temporaryToken);
     const response = await api.post("/api1/users/verify-2fa", {
       code,
       temporaryToken,
@@ -46,7 +46,7 @@ function SecondFactor({ setView }) {
 
     // Guarda el token
     localStorage.setItem("token", data.token);
-    console.log("Token guardado:", data.token);
+    //console.log("Token guardado:", data.token);
 
     // Guarda el usuario y la escuela en localStorage
     localStorage.setItem("user", JSON.stringify(data.data));
@@ -65,7 +65,7 @@ function SecondFactor({ setView }) {
   const handleResendCode = async () => {
     try {
     const email = localStorage.getItem("recoveryEmail"); // o de donde obtengas el email
-    console.log(email);
+    //console.log(email);
       if (!email) {
         setError("No se encontró el correo del usuario.");
         return;
@@ -105,8 +105,10 @@ function SecondFactor({ setView }) {
             />
           ))}
         </div>
-        {message && <p className="success-message">{message}</p>}
-        {error && <p className="error-text">{error}</p>}
+        <div className='message'>
+          {message && <p className="success-message">{message}</p>}
+          {error && <p className="error-text">{error}</p>}          
+        </div>
         <button className="submit-btn" onClick={handleSubmit}>Enviar</button><br />
         <button className="submit-btn" onClick={handleResendCode}>Renviar Codigo</button>
       </div>
